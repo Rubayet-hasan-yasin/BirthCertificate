@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthCertificate.Server", "BirthCertificate.Server\BirthCertificate.Server.csproj", "{D8D09264-06A2-435B-8A33-24A0E6BF279D}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "birthcertificate.client", "birthcertificate.client\birthcertificate.client.esproj", "{F76C5C6E-8259-4880-B522-E42E4E7A4262}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8D09264-06A2-435B-8A33-24A0E6BF279D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8D09264-06A2-435B-8A33-24A0E6BF279D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8D09264-06A2-435B-8A33-24A0E6BF279D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8D09264-06A2-435B-8A33-24A0E6BF279D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F76C5C6E-8259-4880-B522-E42E4E7A4262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F76C5C6E-8259-4880-B522-E42E4E7A4262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F76C5C6E-8259-4880-B522-E42E4E7A4262}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F76C5C6E-8259-4880-B522-E42E4E7A4262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F76C5C6E-8259-4880-B522-E42E4E7A4262}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F76C5C6E-8259-4880-B522-E42E4E7A4262}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A63B7923-1867-44A0-8833-F931A09385AC}
+	EndGlobalSection
+EndGlobal
