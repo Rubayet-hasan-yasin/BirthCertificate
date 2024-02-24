@@ -21,7 +21,7 @@ namespace BirthCertificate.Server.Controllers
                 using (MemoryStream ms = new MemoryStream(bytes))
                 {
                     // Convert MemoryStream to Mat (OpenCV image format)
-                    Mat image = Mat.FromStream(ms, ImreadModes.Unchanged);
+                    Mat image = Mat.FromStream(ms, ImreadModes.Color);
 
                     // Convert image to grayscale
                     Mat grayImage = new Mat();
@@ -29,14 +29,14 @@ namespace BirthCertificate.Server.Controllers
 
                     // Apply threshold
                     Mat thresholdImage = new Mat();
-                    Cv2.Threshold(grayImage, thresholdImage, 0, 255, ThresholdTypes.Binary);
+                    Cv2.Threshold(grayImage, thresholdImage, 128, 255, ThresholdTypes.Binary);
 
                     // Save the thresholded image to a file
                     string thresholdImagePath = "thresholded_image.png";
                     thresholdImage.SaveImage(thresholdImagePath);
 
                     // Perform OCR on the saved image using Tesseract
-                    using (var engine = new TesseractEngine(@"H:\Tesseract\tessdata", "eng", EngineMode.Default))
+                    using (var engine = new TesseractEngine(@"H:\Tesseract\tessdata", "eng", EngineMode.TesseractOnly))
                     {
                         using (var img = Pix.LoadFromFile(thresholdImagePath))
                         {
