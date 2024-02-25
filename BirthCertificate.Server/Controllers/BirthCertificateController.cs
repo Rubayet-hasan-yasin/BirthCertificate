@@ -139,7 +139,7 @@ namespace BirthCertificate.Server.Controllers
                     thresholdImage.SaveImage(thresholdImagePath);
 
                     // Perform OCR on the saved image using Tesseract
-                    using (var engine = new TesseractEngine(@"H:\Tesseract\tessdata", "eng", EngineMode.Default))
+                    using (var engine = new TesseractEngine(@"G:\Csharp\BirthCertificate\BirthCertificate.Server\tessdata\", "eng", EngineMode.Default))
                     {
                         using (var img = Pix.LoadFromFile(thresholdImagePath))
                         {
