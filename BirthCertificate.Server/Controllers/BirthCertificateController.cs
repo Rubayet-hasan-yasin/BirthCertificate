@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing;
-using Microsoft.VisualBasic;
+﻿using BirthCertificate.Server.Models;
+using BirthCertificate.Server.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
 using OpenCvSharp;
+using System.Buffers.Text;
 using System.Text.RegularExpressions;
 using Tesseract;
 
@@ -14,7 +15,7 @@ namespace BirthCertificate.Server.Controllers
     {
 
         [NonAction]
-        private void TextToData(string text)
+        private BirthCertificateDTO TextToData(string text, string base64Image)
         {
             Console.WriteLine(text);
 
@@ -29,7 +30,7 @@ namespace BirthCertificate.Server.Controllers
             Regex inWordRegex = new Regex(@"In Word: (\d{1,2}[a-z]{2}, \d{4})");
             Regex orderOfChildRegex = new Regex(@"Order of Child: (\d+)");
             Regex placeOfBirthRegex = new Regex(@"Place of Birth: (.+)");
-            Regex permanentAddressRegex = new Regex(@"Permanent Address: (.+)");
+            Regex permanentAddressRegex = new Regex(@"Permanent Address: ([^\n]+(?:\n(?!Father's Name:).*)*)");
             Regex fathersNameRegex = new Regex(@"Father's Name: (.+)");
             Regex fathersBRNRegex = new Regex(@"Father's BRN: (.+?)\s*Father's Nationality: (.+)");
             Regex fathersNationalityRegex = new Regex(@"Father's Nationality: (.+?)\s*(?:\||$)");
@@ -63,29 +64,50 @@ namespace BirthCertificate.Server.Controllers
 
 
             //information from matches
-            string registerNo = registerNoMatch.Success ? registerNoMatch.Groups[1].Value.Trim() : "";
+            int registerNo = registerNoMatch.Success ? Convert.ToInt16(registerNoMatch.Groups[1].Value.Trim()) : 0;
             string dateOfIssue = dateOfIssueMatch.Success ? dateOfIssueMatch.Groups[1].Value : "";
             string dateOfRegistration = dateOfRegistrationMatch.Success ? dateOfRegistrationMatch.Groups[1].Value : "";
-            string brNumber = brNumberMatch.Success ? brNumberMatch.Groups[1].Value.Trim() : "";
+            Int64 brNumber = brNumberMatch.Success ? Convert.ToInt64(brNumberMatch.Groups[1].Value.Trim()) : 0;
             string name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : "";
             string sex = sexMatch.Success ? sexMatch.Groups[1].Value : "";
             string dateOfBirth = dateOfBirthMatch.Groups[1].Success ? dateOfBirthMatch.Groups[1].Value : "";
             string inWord = inWordMatch.Groups[1].Success ? inWordMatch.Groups[1].Value : "";
-            string orderOfChild = orderOfChildMatch.Success ? orderOfChildMatch.Groups[1].Value : "";
+            int orderOfChild = orderOfChildMatch.Success ? Convert.ToInt16(orderOfChildMatch.Groups[1].Value) : 0;
             string placeOfBirth = placeOfBirthMatch.Success ? placeOfBirthMatch.Groups[1].Value.Trim() : "";
             string permanentAddress = permanentAddressMatch.Success ? permanentAddressMatch.Groups[1].Value.Trim() : "";
             string fathersName = fathersNameMatch.Success ? fathersNameMatch.Groups[1].Value.Trim() : "";
-            string fathersBRN = fathersBRNMatch.Success ? fathersBRNMatch.Groups[1].Value.Trim() : "";
+            Int64 fathersBRN = fathersBRNMatch.Success ? Convert.ToInt64(fathersBRNMatch.Groups[1].Value.Trim()) : 0;
             string fathersNationality = fathersNationalityMatch.Success ? fathersNationalityMatch.Groups[1].Value.Trim() : "";
-            string fathersNID = fathersNIDMatch.Success ? fathersNIDMatch.Groups[1].Value.Trim() : "";
+            Int32 fathersNID = fathersNIDMatch.Success ? Convert.ToInt32(fathersNIDMatch.Groups[1].Value.Trim()) : 0;
             string mothersName = mothersNameMatch.Success ? mothersNameMatch.Groups[1].Value.Trim() : "";
-            string mothersBRN = mothersBRNMatch.Success ? mothersBRNMatch.Groups[1].Value.Trim() : "";
+            Int64 mothersBRN = mothersBRNMatch.Success ? Convert.ToInt64(mothersBRNMatch.Groups[1].Value.Trim()) : 0;
             string mothersNationality = mothersNationalityMatch.Success ? mothersNationalityMatch.Groups[1].Value.Trim() : "";
-            string mothersNID = mothersNIDMatch.Success ? mothersNIDMatch.Groups[1].Value.Trim() : "";
+            Int32 mothersNID = mothersNIDMatch.Success ? Convert.ToInt32(mothersNIDMatch.Groups[1].Value.Trim()) : 0;
 
 
+            BirthCertificateDTO data = new BirthCertificateDTO();
 
 
+            data.base64Image = base64Image;
+            data.registerNo = registerNo;
+            data.dateOfIssue = dateOfIssue;
+            data.dateOfRegistration = dateOfRegistration;
+            data.brNumber = brNumber;
+            data.name = name;
+            data.gender = sex;
+            data.dateOfBirth = dateOfBirth;
+            data.inWord = inWord;
+            data.orderOfChild = orderOfChild;
+            data.placeOfBirth = placeOfBirth;
+            data.permanentAddress = permanentAddress;
+            data.fathersName = fathersName;
+            data.fathersBRN = fathersBRN;
+            data.fathersNationality = fathersNationality;
+            data.fathersNID = fathersNID;
+            data.mothersName = mothersName;
+            data.mothersBRN = mothersBRN;
+            data.mothersNationality = mothersNationality;
+            data.mothersNID = mothersNID;
 
 
 
@@ -110,21 +132,24 @@ namespace BirthCertificate.Server.Controllers
             Console.WriteLine("Mother's Nationality: " + mothersNationality);
             Console.WriteLine("Mother's NID: " + mothersNID);
 
+
+            return data;
+
         }
 
         [NonAction]
-        private void ImageToText(string base64Image)
+        private BirthCertificateDTO ImageToText(string base64Image)
         {
             try
             {
-                // Assuming the image is received as a Base64 string in the request body
-
                 byte[] bytes = Convert.FromBase64String(base64Image);
 
                 using (MemoryStream ms = new MemoryStream(bytes))
                 {
                     // Convert MemoryStream to Mat (OpenCV image format)
                     Mat image = Mat.FromStream(ms, ImreadModes.Color);
+
+                    //Console.WriteLine(image);
 
                     // Convert image to grayscale
                     Mat grayImage = new Mat();
@@ -138,7 +163,8 @@ namespace BirthCertificate.Server.Controllers
                     string thresholdImagePath = "thresholded_image.png";
                     thresholdImage.SaveImage(thresholdImagePath);
 
-                    // Perform OCR on the saved image using Tesseract
+                // Perform OCR on the saved image using Tesseract
+                //H:\Tesseract\tessdata
                     using (var engine = new TesseractEngine(@"G:\Csharp\BirthCertificate\BirthCertificate.Server\tessdata\", "eng", EngineMode.Default))
                     {
                         using (var img = Pix.LoadFromFile(thresholdImagePath))
@@ -148,7 +174,9 @@ namespace BirthCertificate.Server.Controllers
                                 string text = page.GetText();
 
                                 //Console.WriteLine(text);
-                                TextToData(text);
+                                BirthCertificateDTO data = TextToData(text, base64Image);
+
+                                return data;
                             }
                         }
                     }
@@ -162,16 +190,29 @@ namespace BirthCertificate.Server.Controllers
         }
 
 
-
+        
 
 
         [HttpPost(Name = "GetBirthCertificate")]
-        public ActionResult Post([FromBody] string base64Image)
+        public ActionResult Post([FromBody] ImageModel image)
         {
-            ImageToText(base64Image);
+
+            if(Base64.IsValid(image.base64Image))
+            {
+            BirthCertificateDTO data = ImageToText(image.base64Image);
+                Console.WriteLine("Image is a valid base64 string");
+
+            return Ok(data);
+            }
+            else 
+            {
+                Console.WriteLine("Image is not a valid base64 string");
+                return BadRequest("Image is not a valid base64 string");
+            }
 
 
-            return Ok(base64Image);
+
         }
+
     }
 }

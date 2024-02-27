@@ -46,8 +46,8 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/weatherforecast': {
-                target: 'https://localhost:7208/',
+            '^/BirthCertificate': {
+                target: 'https://localhost:7208',
                 secure: false
             }
         },
