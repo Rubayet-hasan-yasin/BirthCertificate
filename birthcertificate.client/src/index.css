@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.animation-bg{
+background: #FFFFFF;
+background: radial-gradient(at center, #ffffff3f, #ffffff00);
+}
