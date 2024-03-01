@@ -1,13 +1,14 @@
 import axios from "axios";
-import { Base64 } from "js-base64";
 import React, { useContext } from "react";
 import { AuthContext } from "../../../provider/Authprovider";
 import AnikiHamster from "../../../assets/Aniki Hamster.json"
 import Lottie from "lottie-react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { isLoading, setIsLoading }: any = useContext(AuthContext);
+    const { isLoading, setIsLoading, setBRInformation }: any = useContext(AuthContext);
+    const Navigate = useNavigate();
 
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,18 +23,24 @@ const Home = () => {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            const image = reader.result?.toString() || "";
-            const base64String = Base64.encode(image);
+            if (typeof reader.result === 'string') {
+                const base64String: string = reader.result.split(',')[1];
+                
+                axios.post("https://localhost:7208/api/BirthCertificate", { base64Image: base64String })
+                    .then(res => {
+                        //console.log(res.data);
+                        setBRInformation(res.data)
+                        setIsLoading(false);
+                        Navigate("/verifyForm")
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        setIsLoading(false);
+                    })
+            }
 
-            axios.post("https://localhost:7208/api/BirthCertificate", { base64Image: base64String })
-                .then(res => {
-                    console.log(res.data);
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.log(err);
-                    setIsLoading(false);
-                })
+
+            
         };
 
         reader.readAsDataURL(file);

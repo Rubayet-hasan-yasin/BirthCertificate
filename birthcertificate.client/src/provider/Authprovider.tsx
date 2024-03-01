@@ -1,12 +1,11 @@
 import React, { ReactNode, createContext, useState } from "react";
 
-export const AuthContext = createContext({});
 
 type ProviderProps = {
     children: ReactNode;
 };
 
-type allInformation ={
+type BRInformation ={
     registerNo: number;
     dateOfIssue: string;
     dateOfRegistration: string;
@@ -28,13 +27,16 @@ type allInformation ={
     mothersNID: number;
 };
 
+
+export const AuthContext = createContext({});
+
 const Authprovider = ({children}:ProviderProps):React.JSX.Element => {
-    const [allInformation, setAllInformation] = useState<allInformation>();
+    const [BRInformation, setBRInformation] = useState<BRInformation>();
     const [isLoading, setIsLoading]= useState<boolean>(false);
 
     const info ={
-        allInformation,
-        setAllInformation,
+        BRInformation,
+        setBRInformation,
         isLoading,
         setIsLoading,
     };
