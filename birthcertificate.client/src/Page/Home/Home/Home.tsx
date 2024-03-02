@@ -28,7 +28,7 @@ const Home = () => {
                 
                 axios.post("https://localhost:7208/api/BirthCertificate", { base64Image: base64String })
                     .then(res => {
-                        //console.log(res.data);
+                        console.log(res.data);
                         setBRInformation(res.data)
                         setIsLoading(false);
                         Navigate("/verifyForm")

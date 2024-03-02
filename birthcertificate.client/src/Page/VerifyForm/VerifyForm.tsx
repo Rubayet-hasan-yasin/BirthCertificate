@@ -1,6 +1,8 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/Authprovider";
 import { SubmitHandler, useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
     registerNo?: number;
@@ -27,18 +29,30 @@ type Inputs = {
 
 const VerifyForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { BRInformation, setBRInformation }:any = useContext(AuthContext);
+    const { BRInformation }: any = useContext(AuthContext);
+
+    const Navigate = useNavigate();
 
 
     const {register, handleSubmit, formState:{errors}} = useForm();
 
 
-    const onSubmit: SubmitHandler<Inputs> = (data)=>{
-        console.log(data);
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
+        const base64Image = BRInformation.base64Image;
 
-        setBRInformation(data)
+        const newData = { base64Image, ...data }
+
+        axios.put("https://localhost:7208/api/BirthCertificate", newData)
+            .then(res => console.log(res.data))
+
+        //setBRInformation(data)
     };
 
+    useEffect(() => {
+        if (!BRInformation) {
+            Navigate('/');
+        }
+    }, [BRInformation, Navigate])
 
     return (
         <section className="bg-[#171717] min-h-screen text-white py-10">

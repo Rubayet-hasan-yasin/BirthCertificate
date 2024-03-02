@@ -5,7 +5,8 @@ type ProviderProps = {
     children: ReactNode;
 };
 
-type BRInformation ={
+type BRInformation = {
+    base64Image: string;
     registerNo: number;
     dateOfIssue: string;
     dateOfRegistration: string;

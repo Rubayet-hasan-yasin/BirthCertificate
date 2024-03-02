@@ -20,47 +20,25 @@ namespace BirthCertificate.Server.Controllers
             Console.WriteLine(text);
 
             //regular expressions
-            Regex registerNoRegex = new Regex(@"Register No: (\d+) =");
-            Regex dateOfIssueRegex = new Regex(@"Date of Issue: (\d{2}/\d{2}/\d{4})");
-            Regex dateOfRegistrationRegex = new Regex(@"Date of Registration: (\d{2}/\d{2}/\d{4})");
-            Regex brNumberRegex = new Regex(@"BR Number: (.*)");
-            Regex nameRegex = new Regex(@"Name: (.*)");
-            Regex sexRegex = new Regex(@"Sex: (Male|Female)");
-            Regex dateOfBirthRegex = new Regex(@"Date of Birth: (\d{1,2}/\d{1,2}/\d{4})");
-            Regex inWordRegex = new Regex(@"In Word: (\d{1,2}[a-z]{2}, \d{4})");
-            Regex orderOfChildRegex = new Regex(@"Order of Child: (\d+)");
-            Regex placeOfBirthRegex = new Regex(@"Place of Birth: (.+)");
-            Regex permanentAddressRegex = new Regex(@"Permanent Address: ([^\n]+(?:\n(?!Father's Name:).*)*)");
-            Regex fathersNameRegex = new Regex(@"Father's Name: (.+)");
-            Regex fathersBRNRegex = new Regex(@"Father's BRN: (.+?)\s*Father's Nationality: (.+)");
-            Regex fathersNationalityRegex = new Regex(@"Father's Nationality: (.+?)\s*(?:\||$)");
-            Regex fathersNIDRegex = new Regex(@"Father's NID: (.*)");
-            Regex mothersNameRegex = new Regex(@"Mother's Name: (.+)");
-            Regex mothersBRNRegex = new Regex(@"Mother's BRN: (.+?)\s*(?:\||$)");
-            Regex mothersNationalityRegex = new Regex(@"Mother's Nationality: (.+)");
-            Regex mothersNIDRegex = new Regex(@"Mother's NID: (.*)");
-
-
-            //Match the regular expressions with text
-            Match registerNoMatch = registerNoRegex.Match(text);
-            Match dateOfIssueMatch = dateOfIssueRegex.Match(text);
-            Match dateOfRegistrationMatch = dateOfRegistrationRegex.Match(text);
-            Match brNumberMatch = brNumberRegex.Match(text);
-            Match nameMatch = nameRegex.Match(text);
-            Match sexMatch = sexRegex.Match(text);
-            Match dateOfBirthMatch = dateOfBirthRegex.Match(text);
-            Match inWordMatch = inWordRegex.Match(text);
-            Match orderOfChildMatch = orderOfChildRegex.Match(text);
-            Match placeOfBirthMatch = placeOfBirthRegex.Match(text);
-            Match permanentAddressMatch = permanentAddressRegex.Match(text);
-            Match fathersNameMatch = fathersNameRegex.Match(text);
-            Match fathersBRNMatch = fathersBRNRegex.Match(text);
-            Match fathersNationalityMatch = fathersNationalityRegex.Match(text);
-            Match fathersNIDMatch = fathersNIDRegex.Match(text);
-            Match mothersNameMatch = mothersNameRegex.Match(text);
-            Match mothersBRNMatch = mothersBRNRegex.Match(text);
-            Match mothersNationalityMatch = mothersNationalityRegex.Match(text);
-            Match mothersNIDMatch = mothersNIDRegex.Match(text);
+            Match registerNoMatch = new Regex(@"Register No\.\s*(\d+)").Match(text);
+            Match dateOfIssueMatch = new Regex(@"Date of Issue:\s+(\d{2}/\d{2}/\d{4})").Match(text);
+            Match dateOfRegistrationMatch = new Regex(@"Date of Registration: (\d{2}/\d{2}/\d{4})").Match(text);
+            Match brNumberMatch = new Regex(@"BR Number: (.*)").Match(text);
+            Match nameMatch = new Regex(@"Name:(?!.*(Mother's Name:|Father's Name:))(.+)").Match(text);
+            Match sexMatch = new Regex(@"Sex: (Male|Female)").Match(text);
+            Match dateOfBirthMatch = new Regex(@"Date of Birth: (\d{1,2}/\d{1,2}/\d{4})").Match(text);
+            Match inWordMatch = new Regex(@"In Word: (\d{1,2}(?:st|nd|rd|th) [a-zA-Z]+, \d{4})").Match(text);
+            Match orderOfChildMatch = new Regex(@"Order of (?:CRIld|Child): (\d+)").Match(text);
+            Match placeOfBirthMatch = new Regex(@"Place of Birth: (.+)").Match(text);
+            Match permanentAddressMatch = new Regex(@"Permanent Address: ([^\n]+(?:\n(?!Father's Name:).*)*)").Match(text);
+            Match fathersNameMatch = new Regex(@"Father's Name: (.+)").Match(text);
+            Match fathersBRNMatch = new Regex(@"Father's BRN: (.+?)\s*Father's Nationality: (.+)").Match(text);
+            Match fathersNationalityMatch = new Regex(@"Father's Nationality: (.+?)\s*(?:\||$)").Match(text);
+            Match fathersNIDMatch = new Regex(@"Father's NID: (.*)").Match(text);
+            Match mothersNameMatch = new Regex(@"Mother's Name: (.+)").Match(text);
+            Match mothersBRNMatch = new Regex(@"Mother's BRN: (.+?)\s*(?:\||$)").Match(text);
+            Match mothersNationalityMatch = new Regex(@"Mother's Nationality: (.+)").Match(text);
+            Match mothersNIDMatch = new Regex(@"Mother's NID: (.*)").Match(text);
 
 
             //information from matches
@@ -163,8 +141,8 @@ namespace BirthCertificate.Server.Controllers
                     string thresholdImagePath = "thresholded_image.png";
                     thresholdImage.SaveImage(thresholdImagePath);
 
-                // Perform OCR on the saved image using Tesseract
-                //H:\Tesseract\tessdata
+                    // Perform OCR on the saved image using Tesseract
+                    //H:\Tesseract\tessdata
                     using (var engine = new TesseractEngine(@"G:\Csharp\BirthCertificate\BirthCertificate.Server\tessdata\", "eng", EngineMode.Default))
                     {
                         using (var img = Pix.LoadFromFile(thresholdImagePath))
@@ -190,25 +168,37 @@ namespace BirthCertificate.Server.Controllers
         }
 
 
-        
 
 
-        [HttpPost(Name = "GetBirthCertificate")]
-        public ActionResult Post([FromBody] ImageModel image)
+
+        [HttpPost]
+        public ActionResult PostImageData([FromBody] ImageModel image)
         {
 
-            if(Base64.IsValid(image.base64Image))
+            if (Base64.IsValid(image.base64Image))
             {
-            BirthCertificateDTO data = ImageToText(image.base64Image);
+                BirthCertificateDTO data = ImageToText(image.base64Image);
                 Console.WriteLine("Image is a valid base64 string");
 
-            return Ok(data);
+                return Ok(data);
             }
-            else 
+            else
             {
                 Console.WriteLine("Image is not a valid base64 string");
                 return BadRequest("Image is not a valid base64 string");
             }
+
+
+
+        }
+
+
+        [HttpPut]
+        public ActionResult PostImageData([FromBody] BirthCertificateData data)
+        {
+            Console.WriteLine(data.base64Image);
+
+            return Ok(data);
 
 
 
