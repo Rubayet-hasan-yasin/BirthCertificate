@@ -5,10 +5,13 @@ import AnikiHamster from "../../../assets/Aniki Hamster.json"
 import Lottie from "lottie-react";
 import { useNavigate } from "react-router-dom";
 
+
+
 const Home = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { isLoading, setIsLoading, setBRInformation }: any = useContext(AuthContext);
     const Navigate = useNavigate();
+
 
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +49,7 @@ const Home = () => {
         reader.readAsDataURL(file);
     };
 
+    
 
     return (
         <section className={"bg-[#171717] h-screen flex justify-center items-center text-white"}>

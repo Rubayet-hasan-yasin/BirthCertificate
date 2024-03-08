@@ -1,5 +1,7 @@
 ﻿using BirthCertificate.Server.Models.DTO;
+using Newtonsoft.Json.Linq;
 using OpenCvSharp;
+using System.Text;
 using System.Text.RegularExpressions;
 using Tesseract;
 
@@ -168,5 +170,27 @@ namespace BirthCertificate.Server.Operations
                 throw;
             }
         }
+
+
+        //public async void Translate()
+        //{
+        //    using (var client = new HttpClient())
+        //    {
+        //        HttpResponseMessage response = await client.GetAsync($"https://api.mymemory.translated.net/get?q=${"hello"}!&langpair=en|bn");
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            string data = await response.Content.ReadAsStringAsync();
+
+        //            var dataObj = JObject.Parse(data);
+                    
+        //            Console.WriteLine(dataObj);
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"Error: {response.StatusCode}");
+        //        }
+        //    }
+        //}
     }
 }

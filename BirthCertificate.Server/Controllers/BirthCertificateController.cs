@@ -3,6 +3,7 @@ using BirthCertificate.Server.Models.DTO;
 using BirthCertificate.Server.Operations;
 using Microsoft.AspNetCore.Mvc;
 using System.Buffers.Text;
+using System.Net.Http.Headers;
 
 
 
@@ -33,11 +34,16 @@ namespace BirthCertificate.Server.Controllers
 
 
         [HttpPut]
-        public ActionResult PostImageData([FromBody] BirthCertificateData data)
+        public ActionResult PostImageData([FromBody] string data)
         {
-            Console.WriteLine(data.brNumber);
+            Console.WriteLine(data);
+
+            
+
 
             return Ok(data);
         }
+
+        
     }
 }
