@@ -34,7 +34,7 @@ namespace BirthCertificate.Server.Controllers
 
 
         [HttpPut]
-        public ActionResult PostImageData([FromBody] string data)
+        public ActionResult PostImageData([FromBody] BirthCertificateEnglishAndBanglaData data)
         {
             Console.WriteLine(data);
 
@@ -46,4 +46,5 @@ namespace BirthCertificate.Server.Controllers
 
         
     }
+
 }

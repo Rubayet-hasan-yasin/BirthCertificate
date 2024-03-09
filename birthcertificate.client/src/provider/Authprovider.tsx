@@ -12,7 +12,7 @@ type BRInformation = {
     dateOfRegistration: string;
     brNumber: number;
     name: string;
-    sex: string;
+    gender: string;
     dateOfBirth: string;
     inWord: string;
     orderOfChild: number;
@@ -32,35 +32,15 @@ type BRInformation = {
 export const AuthContext = createContext({});
 
 const Authprovider = ({ children }: ProviderProps): React.JSX.Element => {
-    const [BRInformation, setBRInformation] = useState<BRInformation>({
-        "registerNo": 1,
-        "dateOfIssue": "11/11/2022",
-        "dateOfRegistration": "11/11/2022",
-        "brNumber": 11111111111111111,
-        "name": "Rubayet Hasan Yasin",
-        "sex": "Male",
-        "dateOfBirth": "23/12/2020",
-        "inWord": "10st Feb, 2020",
-        "placeOfBirth": "pabna",
-        "orderOfChild": 3,
-        "permanentAddress": "dhaka,bangladesh",
-        "fathersName": "Kalam Molla",
-        "fathersBRN": 11111111111111111,
-        "fathersNID": 1111111111111,
-        "fathersNationality": "Bangladeshi",
-        "mothersName": "Asma",
-        "mothersBRN": 11111111111111111,
-        "mothersNID": 1111111111,
-        "mothersNationality": "Bangladeshi"
-    });
+    const [BRInformation, setBRInformation] = useState<BRInformation>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
 
 
-    const numericBN = {
-        0:"০",
-        1:"১",
+    const numericBN: Record<string, string> = {
+        0: "০",
+        1: "১",
         2: "২",
         3: "৩",
         4: "৪",
@@ -110,7 +90,7 @@ const Authprovider = ({ children }: ProviderProps): React.JSX.Element => {
         else if(typeof text == "number"){
             const numArray = text.toString().split("")
 
-            const bnDigits = numArray.map((num)=> numericBN[num])
+            const bnDigits = numArray.map((num) => numericBN[num])
 
             const bnNumber = bnDigits.join("");
             return bnNumber;

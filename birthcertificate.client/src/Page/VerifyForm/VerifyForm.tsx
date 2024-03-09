@@ -12,7 +12,7 @@ type Inputs = {
     dateOfRegistration?: string;
     brNumber?: number;
     name?: string;
-    sex?: string;
+    gender?: string;
     dateOfBirth?: string;
     inWord?: string;
     orderOfChild?: number;
@@ -41,7 +41,7 @@ const VerifyForm = () => {
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         setIsLoading(true);
-        const base64Image = BRInformation?.base64Image;
+        const base64Image = BRInformation.base64Image;
 
         const bnData = await translateObj(data);
 
@@ -54,7 +54,7 @@ const VerifyForm = () => {
                 dateOfRegistrationBn: bnData.dateOfRegistration,
                 brNumberBn: bnData.brNumber,
                 nameBn: bnData.name,
-                sexBn: bnData.sex,
+                genderBn: bnData.gender,
                 dateOfBirthBn: bnData.dateOfBirth,
                 inWordBn: bnData.inWord,
                 orderOfChildBn: bnData.orderOfChild,
@@ -67,23 +67,21 @@ const VerifyForm = () => {
                 mothersNameBn: bnData.mothersName,
                 mothersBRNBn: bnData.mothersBRN,
                 mothersNationalityBn: bnData.mothersNationality,
-                mothersNID: bnData.mothersNID
+                mothersNIDBn: bnData.mothersNID
             }
         };
 
+        
 
 
-
-        axios.put("https://localhost:7208/api/BirthCertificate", newData)
-            .then(res => {
-                console.log(res);
-
-                setIsLoading(false);
-            })
-            .catch(err=> {
-                console.log(err)
-                setIsLoading(false)
-            })
+        try {
+            const response = await axios.put("https://localhost:7208/api/BirthCertificate", newData);
+            console.log(response);
+            setIsLoading(false);
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+        }
 
     };
 
@@ -108,7 +106,7 @@ const VerifyForm = () => {
 
     useEffect(() => {
         if (!BRInformation) {
-            // Navigate('/');
+             Navigate('/');
         }
 
 
@@ -196,9 +194,9 @@ const VerifyForm = () => {
                             <input
                                 type="text"
                                 id="sex"
-                                defaultValue={BRInformation?.sex}
+                                defaultValue={BRInformation?.gender}
 
-                                {...register("sex", { required: "sex is required", pattern: { value: /^(Male|Female|Other)$/, message: "Please enter a valid sex (Male, Female, or Other)" } })}
+                                {...register("gender", { required: "sex is required", pattern: { value: /^(Male|Female|Other)$/, message: "Please enter a valid sex (Male, Female, or Other)" } })}
 
                                 className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " required />
                             <label htmlFor="sex" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Sex</label>
