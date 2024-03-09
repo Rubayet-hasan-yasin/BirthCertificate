@@ -40,7 +40,7 @@ const Authprovider = ({ children }: ProviderProps): React.JSX.Element => {
         "name": "Rubayet Hasan Yasin",
         "sex": "Male",
         "dateOfBirth": "23/12/2020",
-        "inWord": "10th Feb, 2020",
+        "inWord": "10st Feb, 2020",
         "placeOfBirth": "pabna",
         "orderOfChild": 3,
         "permanentAddress": "dhaka,bangladesh",
@@ -56,35 +56,45 @@ const Authprovider = ({ children }: ProviderProps): React.JSX.Element => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
+
+
+    const numericBN = {
+        0:"০",
+        1:"১",
+        2: "২",
+        3: "৩",
+        4: "৪",
+        5: "৫",
+        6: "৬",
+        7: "৭",
+        8: "৮",
+        9: "৯",
+    };
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const translate = async (text: any) => {
 
-        const numericBN = {
-            0:"০",
-            1:"১",
-            2: "২",
-            3: "৩",
-            4: "৪",
-            5: "৫",
-            6: "৬",
-            7: "৭",
-            8: "৮",
-            9: "৯",
-        };
 
-        const pattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/);
+        const datePattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/);
+        const inWordPattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\s+\d{4}$/);
+        
+        if(inWordPattern.test(text)){
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=en|bn`)
+            const data = await res.json();
+            const bnText = data.responseData.translatedText;
 
-        if(pattern.test(text)){
+            const dateArray = bnText.split(" ");
+            const dateArrayBn = numberToBnNumber(dateArray);
+            const newArray = [dateArrayBn[0],dateArray[1],dateArrayBn[2]]
+
+            const bnDate = newArray.join(" ")
+
+            return bnDate;
+        }
+        else if(datePattern.test(text)){
             const dateArry = text.toString().split("/")
 
-            const dateArayBn = dateArry.map((num: string)=>{
-                const singleDigit = num.split("");
-                const bnArray = singleDigit.map(num=> numericBN[num])
-
-                const number = bnArray.join("")
-
-                return number
-            })
+            const dateArayBn = numberToBnNumber(dateArry);
 
             const bnDate = dateArayBn.join("/")
             
@@ -107,6 +117,21 @@ const Authprovider = ({ children }: ProviderProps): React.JSX.Element => {
         }
         
     };
+
+
+    const numberToBnNumber=(dateArry:string[])=>{
+       
+        const dateArayBn = dateArry.map((num: string)=>{
+            const singleDigit = num.split("");
+            const bnArray = singleDigit.map(num=> numericBN[num])
+
+            const number = bnArray.join("")
+
+            return number
+        });
+
+        return dateArayBn;
+    }
 
     const info = {
         BRInformation,

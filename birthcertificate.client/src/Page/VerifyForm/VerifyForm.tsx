@@ -3,6 +3,7 @@ import { AuthContext } from "../../provider/Authprovider";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AnimationAnikiHamster from "../../components/AnimationAnikiHamster.tsx"
 
 
 type Inputs = {
@@ -11,7 +12,7 @@ type Inputs = {
     dateOfRegistration?: string;
     brNumber?: number;
     name?: string;
-    gender?: string;
+    sex?: string;
     dateOfBirth?: string;
     inWord?: string;
     orderOfChild?: number;
@@ -30,7 +31,7 @@ type Inputs = {
 
 const VerifyForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { BRInformation, translate, setBRInformation }: any = useContext(AuthContext);
+    const { BRInformation, translate, setIsLoading, isLoading }: any = useContext(AuthContext);
 
     const Navigate = useNavigate();
 
@@ -38,51 +39,80 @@ const VerifyForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
 
-    const onSubmit: SubmitHandler<Inputs> = async(data) => {
-
-        setBRInformation(data);
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        setIsLoading(true);
         const base64Image = BRInformation?.base64Image;
-
-        const newData = { BRInfoEn: { base64Image, ...data } }
 
         const bnData = await translateObj(data);
 
-        console.log(bnData);
-        
-        
+        const newData = {
+            base64Image,
+            BRInfoEn: { ...data },
+            BRInfoBn: {
+                registerNoBn: bnData.registerNo,
+                dateOfIssueBn: bnData.dateOfIssue,
+                dateOfRegistrationBn: bnData.dateOfRegistration,
+                brNumberBn: bnData.brNumber,
+                nameBn: bnData.name,
+                sexBn: bnData.sex,
+                dateOfBirthBn: bnData.dateOfBirth,
+                inWordBn: bnData.inWord,
+                orderOfChildBn: bnData.orderOfChild,
+                placeOfBirthBn: bnData.placeOfBirth,
+                permanentAddressBn: bnData.permanentAddress,
+                fathersNameBn: bnData.fathersName,
+                fathersBRNBn: bnData.fathersBRN,
+                fathersNationalityBn: bnData.fathersNationality,
+                fathersNIDBn: bnData.fathersNID,
+                mothersNameBn: bnData.mothersName,
+                mothersBRNBn: bnData.mothersBRN,
+                mothersNationalityBn: bnData.mothersNationality,
+                mothersNID: bnData.mothersNID
+            }
+        };
 
-        // axios.put("https://localhost:7208/api/BirthCertificate", newData)
-        //     .then(res => console.log(res.data))
 
+
+
+        axios.put("https://localhost:7208/api/BirthCertificate", newData)
+            .then(res => {
+                console.log(res);
+
+                setIsLoading(false);
+            })
+            .catch(err=> {
+                console.log(err)
+                setIsLoading(false)
+            })
 
     };
 
 
-    const translateObj = async(data:Inputs) => {
+    const translateObj = async (data: Inputs) => {
         const translatedData = {};
-        
-        
+
+
         for (const [key, value] of Object.entries(data)) {
-            
-            if(key == "registerNo" || key == "brNumber" || key == "orderOfChild" || key == "fathersBRN" || key == "fathersNID" || key == "mothersBRN" || key == "mothersNID"){
+
+            if (key == "registerNo" || key == "brNumber" || key == "orderOfChild" || key == "fathersBRN" || key == "fathersNID" || key == "mothersBRN" || key == "mothersNID") {
                 translatedData[key] = await translate(parseInt(value));
             }
-            else{
+            else {
                 translatedData[key] = await translate(value);
             }
-        }      
+        }
         return translatedData;
     }
 
-    
+
 
     useEffect(() => {
         if (!BRInformation) {
             // Navigate('/');
         }
 
-        
-        
+
+
     }, [BRInformation, Navigate])
 
     return (
@@ -196,7 +226,7 @@ const VerifyForm = () => {
                                 id="InWord"
                                 defaultValue={BRInformation?.inWord}
 
-                                {...register("inWord", { required: "Date is required", pattern: { value: /^(0?[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\s+\d{4}$/, message: "Please enter a valid date in the format '10th Feb, 2000'" } })}
+                                {...register("inWord", { required: "Date is required", pattern: { value: /^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\s+\d{4}$/, message: "Please enter a valid date in the format '10th Feb, 2000'" } })}
 
                                 className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " required />
                             <label htmlFor="InWord" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">In Word</label>
@@ -380,11 +410,15 @@ const VerifyForm = () => {
 
 
                     <div className="mt-20 flex justify-center">
-                        <button type="submit" className="glow-on-hover font-bold text-gray-400 flex justify-center items-center gap-5">NEXT</button>
+                        <button disabled={isLoading} type="submit" className={`glow-on-hover font-bold text-gray-400 flex justify-center items-center gap-5`}>NEXT</button>
                     </div>
 
                 </form>
+
+                <AnimationAnikiHamster />
+
             </div>
+
         </section>
     );
 };

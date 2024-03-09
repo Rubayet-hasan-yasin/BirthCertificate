@@ -4,6 +4,7 @@ import { AuthContext } from "../../../provider/Authprovider";
 import AnikiHamster from "../../../assets/Aniki Hamster.json"
 import Lottie from "lottie-react";
 import { useNavigate } from "react-router-dom";
+import AnimationAnikiHamster from "../../../components/AnimationAnikiHamster";
 
 
 
@@ -60,9 +61,7 @@ const Home = () => {
                 <input id="upload" type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
             </div>
 
-            <div className={`absolute w-80 animation-bg rounded-full ${isLoading?"block":"hidden"}`}>
-                <Lottie animationData={AnikiHamster} loop={true} />
-            </div>
+            <AnimationAnikiHamster/>
         </section>
     );
 };
