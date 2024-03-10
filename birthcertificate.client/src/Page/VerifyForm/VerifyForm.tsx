@@ -78,6 +78,8 @@ const VerifyForm = () => {
             }
         };
 
+        console.log(BRInformation);
+        console.log(data);
 
 
         try {
