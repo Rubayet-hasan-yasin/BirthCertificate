@@ -14,12 +14,12 @@
         public string placeOfBirth { get; set; } = string.Empty;
         public string permanentAddress { get; set; } = string.Empty;
         public string fathersName { get; set; } = string.Empty;
-        public Int64 fathersBRN { get; set; } = 0;
+        public Int64? fathersBRN { get; set; } = 0;
         public string fathersNationality { get; set; } = string.Empty;
-        public Int32 fathersNID { get; set; } = 0;
+        public Int32? fathersNID { get; set; } = 0;
         public string mothersName { get; set; } = string.Empty;
-        public Int64 mothersBRN { get; set; } = 0;
+        public Int64? mothersBRN { get; set; } = 0;
         public string mothersNationality { get; set; } = string.Empty;
-        public Int32 mothersNID { get; set; } = 0;
+        public Int32? mothersNID { get; set; } = 0;
     }
 }

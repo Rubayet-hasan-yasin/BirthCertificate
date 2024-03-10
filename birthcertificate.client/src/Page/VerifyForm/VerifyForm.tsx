@@ -36,18 +36,25 @@ const VerifyForm = () => {
     const Navigate = useNavigate();
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         setIsLoading(true);
+
         const base64Image = BRInformation.base64Image;
 
         const bnData = await translateObj(data);
 
         const newData = {
             base64Image,
-            BRInfoEn: { ...data },
+            BRInfoEn: {
+                ...data,
+                fathersBRN: data.fathersBRN || 0,
+                fathersNID: data.fathersNID || 0,
+                mothersBRN: data.mothersBRN || 0,
+                mothersNID: data.mothersNID || 0
+            },
             BRInfoBn: {
                 registerNoBn: bnData.registerNo,
                 dateOfIssueBn: bnData.dateOfIssue,
@@ -71,7 +78,6 @@ const VerifyForm = () => {
             }
         };
 
-        
 
 
         try {
@@ -83,6 +89,9 @@ const VerifyForm = () => {
             setIsLoading(false);
         }
 
+        
+        reset();
+        Navigate('/');
     };
 
 
@@ -108,9 +117,6 @@ const VerifyForm = () => {
         if (!BRInformation) {
              Navigate('/');
         }
-
-
-
     }, [BRInformation, Navigate])
 
     return (
@@ -315,10 +321,12 @@ const VerifyForm = () => {
                                 id="fathersBRN"
                                 defaultValue={BRInformation?.fathersBRN ? BRInformation?.fathersBRN : null}
 
-                                {...register("fathersBRN", { required: "fathersBRN is required", pattern: { value: /^\d{17}$/, message: "Please enter Father's BRN 17 digits BRNumber" } })}
+                                {...register("fathersBRN", { required: false, pattern: { value: /^\d{17}$/, message: "Please enter Father's BRN 17 digits BRNumber" } })}
 
                                 className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " />
-                            <label htmlFor="fatherBRN" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Father's BRN</label>
+                            <label htmlFor="fatherBRN" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Father's BRN (Optional)
+                            </label>
                         </div>
 
                     </div>
@@ -331,10 +339,12 @@ const VerifyForm = () => {
                                 id="fathersNID"
                                 defaultValue={BRInformation?.fathersNID ? BRInformation?.fathersNID : null}
 
-                                {...register("fathersNID", { required: "Father's NID is required", pattern: { value: /^\d{10}(\d{3})?$/, message: "Enter a valid NID Number" } })}
+                                {...register("fathersNID", { required: false, pattern: { value: /^\d{10}(\d{3})?$/, message: "Enter a valid NID Number" } })}
 
                                 className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " />
-                            <label htmlFor="fatherNID" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Father's NID</label>
+                            <label htmlFor="fatherNID" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Father's NID (Optional)
+                            </label>
                         </div>
 
                         <div className="relative z-0 w-full mb-5 group">
@@ -371,10 +381,12 @@ const VerifyForm = () => {
                                 id="mothersBRN"
                                 defaultValue={BRInformation?.mothersBRN ? BRInformation?.mothersBRN : null}
 
-                                {...register("mothersBRN", { required: "MothersBRN is required", pattern: { value: /^\d{17}$/, message: "Please enter Mother's BRN 17 digits BRNumber" } })}
+                                {...register("mothersBRN", { required: false, pattern: { value: /^\d{17}$/, message: "Please enter Mother's BRN 17 digits BRNumber" } })}
 
                                 className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " />
-                            <label htmlFor="motherBRN" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Mother's BRN</label>
+                            <label htmlFor="motherBRN" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Mother's BRN (Optional)
+                            </label>
                         </div>
 
                     </div>
@@ -390,7 +402,9 @@ const VerifyForm = () => {
                                 {...register("mothersNID", { required: false, pattern: { value: /^\d{10}(\d{3})?$/, message: "Enter a valid NID Number" } })}
 
                                 className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 peer" placeholder=" " />
-                            <label htmlFor="motherNID" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Mother's NID</label>
+                            <label htmlFor="motherNID" className="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Mother's NID (Optional)
+                            </label>
                         </div>
 
                         <div className="relative z-0 w-full mb-5 group">

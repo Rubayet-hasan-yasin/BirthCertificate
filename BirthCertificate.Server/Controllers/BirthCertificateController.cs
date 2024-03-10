@@ -38,7 +38,6 @@ namespace BirthCertificate.Server.Controllers
         [HttpPut]
         public ActionResult PostImageData([FromBody] BirthCertificateEnglishAndBanglaData data)
         {
-            Console.WriteLine(data);
 
             Env env = new Env();
 
@@ -75,10 +74,10 @@ namespace BirthCertificate.Server.Controllers
                 command.Parameters.AddWithValue("p_fathersNationality", BRInfoEn.fathersNationality);
                 command.Parameters.AddWithValue("p_fathersNID", BRInfoEn.fathersNID);
                 command.Parameters.AddWithValue("p_mothersName", BRInfoEn.mothersName);
-                command.Parameters.AddWithValue("p_mothersBRN", BRInfoEn.mothersBRN);
+                command.Parameters.AddWithValue("p_mothersBRN", value: BRInfoEn.mothersBRN);
                 command.Parameters.AddWithValue("p_mothersNationality", BRInfoEn.mothersNationality);
                 command.Parameters.AddWithValue("p_mothersNID", BRInfoEn.mothersNID);
-         
+
 
                 //bangla Data 
 
@@ -101,7 +100,7 @@ namespace BirthCertificate.Server.Controllers
                 command.Parameters.AddWithValue("p_mothersBRNBn", BRInfoBn.mothersBRNBn);
                 command.Parameters.AddWithValue("p_mothersNationalityBn", BRInfoBn.mothersNationalityBn);
                 command.Parameters.AddWithValue("p_mothersNIDBn", BRInfoBn.mothersNIDBn);
-                
+
 
                 command.ExecuteNonQuery();
                 connection.Close();
