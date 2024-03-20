@@ -177,21 +177,53 @@ namespace BirthCertificate.Server.Operations
         {
             BirthCertificateBanglaData BRInfoBn = new BirthCertificateBanglaData();
 
-            BRInfoBn.registerNoBn = TranslateNumeric(BRInfoEn.registerNo);
-           
+            BRInfoBn.registerNoBn = TranslateNumeric(BRInfoEn.registerNo.ToString());
+            BRInfoBn.dateOfIssueBn = TranslateDate(BRInfoEn.dateOfIssue);
+            BRInfoBn.dateOfRegistrationBn = TranslateDate(BRInfoEn.dateOfRegistration);
+            BRInfoBn.brNumberBn = TranslateNumeric(Convert.ToString(BRInfoEn.brNumber));
+            BRInfoBn.nameBn = TranslateTextApi(BRInfoEn.name).Result;
+            BRInfoBn.genderBn = TranslateTextApi(BRInfoEn.gender).Result;
+            BRInfoBn.dateOfBirthBn = TranslateDate(BRInfoEn.dateOfBirth);
+            BRInfoBn.inWordBn = TranslateTextApi(BRInfoEn.inWord).Result;
+            BRInfoBn.orderOfChildBn = TranslateNumeric(BRInfoEn.orderOfChild.ToString());
+            BRInfoBn.placeOfBirthBn = TranslateTextApi(BRInfoEn.placeOfBirth).Result;
+            BRInfoBn.permanentAddressBn = TranslateTextApi(BRInfoEn.permanentAddress).Result;
+            BRInfoBn.fathersNameBn = TranslateTextApi(BRInfoEn.fathersName).Result;
+            BRInfoBn.fathersBRNBn = TranslateNumeric(BRInfoEn.fathersBRN.ToString());
+            BRInfoBn.fathersNationalityBn = TranslateTextApi(BRInfoEn.fathersNationality).Result;
+            BRInfoBn.fathersNIDBn = TranslateNumeric(BRInfoEn.fathersNID.ToString());
+            BRInfoBn.mothersNameBn = TranslateTextApi(BRInfoEn.mothersName).Result;
+            BRInfoBn.mothersBRNBn = TranslateNumeric(BRInfoEn.mothersBRN.ToString());
+            BRInfoBn.mothersNationalityBn = TranslateTextApi(BRInfoEn.mothersNationality).Result;
+            BRInfoBn.mothersNIDBn = TranslateNumeric(BRInfoEn.mothersNID.ToString());
 
-
-            BRInfoBn.brNumberBn = TranslateNumeric(BRInfoEn.brNumber);
 
             return BRInfoBn;
         }
 
-        private string TranslateNumeric(Int64 number)
+        private string TranslateDate(string date)
         {
+            string[] numberArray = date.Split('/');
+
+            string[] datenums = new string[numberArray.Length];
+            for (int i = 0; i < numberArray.Length; i++)
+            {
+                datenums[i] = TranslateNumeric(numberArray[i]);
+            }
+
+            string newDate = string.Join("/", datenums);
+            return newDate;
+        }
+
+        private string TranslateNumeric(string numbers)
+        {
+            Console.WriteLine(numbers);
             string[] banglaDigits = { "০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯" };
             string banglaVersion = "";
 
-            string numString = number.ToString();
+            string numString = numbers.ToString();
+
+            
 
             foreach (char digit in numString)
             {
@@ -203,7 +235,7 @@ namespace BirthCertificate.Server.Operations
 
         }
 
-        private async Task<string?> TranslateTextApi(string text)
+        private async Task<string> TranslateTextApi(string text)
         {
 
             using (var client = new HttpClient())
@@ -219,12 +251,12 @@ namespace BirthCertificate.Server.Operations
 
                     Console.WriteLine("t text: " + translationResponse?.ResponseData?.TranslatedText);
 
-                    return translationResponse?.ResponseData?.TranslatedText;
+                    return translationResponse?.ResponseData?.TranslatedText ?? "";
                 }
                 else
                 {
                     Console.WriteLine($"Error: {response.StatusCode}");
-                    return null;
+                    return "";
                 }
             }
 

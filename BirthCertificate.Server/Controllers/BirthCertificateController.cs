@@ -5,6 +5,7 @@ using BirthCertificate.Server.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Buffers.Text;
+using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -107,8 +108,6 @@ namespace BirthCertificate.Server.Controllers
 
                 var translate = operation.TranslateDataEnToBn(BRInfoEn);
 
-                BirthCertificateBanglaData BRInfoBn = new BirthCertificateBanglaData();
-                
 
                 return Ok(translate);
             }
