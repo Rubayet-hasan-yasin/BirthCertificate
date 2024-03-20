@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using OpenCvSharp;
 using System.Text.RegularExpressions;
 using Tesseract;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BirthCertificate.Server.Operations
 {
@@ -172,7 +173,35 @@ namespace BirthCertificate.Server.Operations
         }
 
 
-        
+        public BirthCertificateBanglaData TranslateDataEnToBn(BirthCertificateData BRInfoEn)
+        {
+            BirthCertificateBanglaData BRInfoBn = new BirthCertificateBanglaData();
+
+            BRInfoBn.registerNoBn = TranslateNumeric(BRInfoEn.registerNo);
+           
+
+
+            BRInfoBn.brNumberBn = TranslateNumeric(BRInfoEn.brNumber);
+
+            return BRInfoBn;
+        }
+
+        private string TranslateNumeric(Int64 number)
+        {
+            string[] banglaDigits = { "০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯" };
+            string banglaVersion = "";
+
+            string numString = number.ToString();
+
+            foreach (char digit in numString)
+            {
+                int digitValue = int.Parse(digit.ToString());
+                banglaVersion += banglaDigits[digitValue];
+            }
+
+            return banglaVersion;
+
+        }
 
         private async Task<string?> TranslateTextApi(string text)
         {

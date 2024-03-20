@@ -5,6 +5,7 @@ using BirthCertificate.Server.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Buffers.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 
@@ -36,12 +37,8 @@ namespace BirthCertificate.Server.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> PostImageData([FromBody] BirthCertificateEnglishData BRInfoEn)
+        public async Task<ActionResult> PostImageData([FromBody] BirthCertificateData BRInfoEn)
         {
-
-           
-
-            
 
             try
             {
@@ -106,11 +103,13 @@ namespace BirthCertificate.Server.Controllers
                 //command.ExecuteNonQuery();
                 //connection.Close();
 
+
+
+                var translate = operation.TranslateDataEnToBn(BRInfoEn);
+
+                BirthCertificateBanglaData BRInfoBn = new BirthCertificateBanglaData();
                 
 
-                var translate = await operation.TranslateTextApi("rubayet");
-
-                Console.WriteLine(translate);
                 return Ok(translate);
             }
             catch (Exception ex)
