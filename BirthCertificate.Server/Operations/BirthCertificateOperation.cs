@@ -1,7 +1,7 @@
-﻿using BirthCertificate.Server.Models.DTO;
-using Newtonsoft.Json.Linq;
+﻿using BirthCertificate.Server.Models;
+using BirthCertificate.Server.Models.DTO;
+using Newtonsoft.Json;
 using OpenCvSharp;
-using System.Text;
 using System.Text.RegularExpressions;
 using Tesseract;
 
@@ -172,25 +172,33 @@ namespace BirthCertificate.Server.Operations
         }
 
 
-        //public async void Translate()
-        //{
-        //    using (var client = new HttpClient())
-        //    {
-        //        HttpResponseMessage response = await client.GetAsync($"https://api.mymemory.translated.net/get?q=${"hello"}!&langpair=en|bn");
+        
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            string data = await response.Content.ReadAsStringAsync();
+        private async Task<string?> TranslateTextApi(string text)
+        {
 
-        //            var dataObj = JObject.Parse(data);
-                    
-        //            Console.WriteLine(dataObj);
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine($"Error: {response.StatusCode}");
-        //        }
-        //    }
-        //}
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync($"https://api.mymemory.translated.net/get?q={text}&langpair=en|bn");
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+
+                    var translationResponse = JsonConvert.DeserializeObject<TranslationResponse>(data);
+
+                    Console.WriteLine("t text: " + translationResponse?.ResponseData?.TranslatedText);
+
+                    return translationResponse?.ResponseData?.TranslatedText;
+                }
+                else
+                {
+                    Console.WriteLine($"Error: {response.StatusCode}");
+                    return null;
+                }
+            }
+
+        }
     }
 }

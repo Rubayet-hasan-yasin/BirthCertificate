@@ -1,7 +1,12 @@
-﻿namespace BirthCertificate.Server.Models
+﻿using System.Buffers.Text;
+using System.ComponentModel.DataAnnotations;
+
+namespace BirthCertificate.Server.Models
 {
     public class BirthCertificateEnglishData
     {
+        [Base64String]
+        public required string base64Image { get; set; }
         public int registerNo { get; set; } = 0;
         public string dateOfIssue { get; set; } = string.Empty;
         public string dateOfRegistration { get; set; } = string.Empty;
