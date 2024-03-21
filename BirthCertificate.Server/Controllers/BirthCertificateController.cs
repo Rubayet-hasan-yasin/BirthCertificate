@@ -106,10 +106,11 @@ namespace BirthCertificate.Server.Controllers
 
 
 
-                var translate = operation.TranslateDataEnToBn(BRInfoEn);
+                //var translate = operation.TranslateDataEnToBn(BRInfoEn);
+                var date = operation.TranslateInWordDate("10th Feb, 1968");
 
 
-                return Ok(translate);
+                return Ok(date);
             }
             catch (Exception ex)
             {

@@ -200,19 +200,40 @@ namespace BirthCertificate.Server.Operations
 
             return BRInfoBn;
         }
-
+        
         private string TranslateDate(string date)
         {
-            string[] numberArray = date.Split('/');
+            
 
-            string[] datenums = new string[numberArray.Length];
-            for (int i = 0; i < numberArray.Length; i++)
+            Match datePattern =new Regex(@"^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\\s+\\d{4}$").Match(date);
+
+            if (datePattern.Success)
             {
-                datenums[i] = TranslateNumeric(numberArray[i]);
-            }
+                var text = TranslateTextApi(date).Result;
 
-            string newDate = string.Join("/", datenums);
-            return newDate;
+                string[] textSplit = text.Split(' ');
+
+                string firstNum = TranslateNumeric(textSplit[0]);
+                string secondNum = TranslateNumeric(textSplit[2]);
+
+                string[] BnArray = { firstNum, textSplit[1], secondNum };
+
+                string BnDate = string.Join(" ", BnArray);
+
+                return BnDate;
+            }
+            else
+            {
+                string[] numberArray = date.Split('/');
+                string[] datenums = new string[numberArray.Length];
+                for (int i = 0; i < numberArray.Length; i++)
+                {
+                    datenums[i] = TranslateNumeric(numberArray[i]);
+                }
+
+                string newDate = string.Join("/", datenums);
+                return newDate;
+            }
         }
 
         private string TranslateNumeric(string numbers)
