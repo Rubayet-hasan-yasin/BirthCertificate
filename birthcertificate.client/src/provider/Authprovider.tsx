@@ -38,87 +38,86 @@ const Authprovider = ({ children }: ProviderProps): React.JSX.Element => {
 
 
 
-    const numericBN: Record<string, string> = {
-        0: "০",
-        1: "১",
-        2: "২",
-        3: "৩",
-        4: "৪",
-        5: "৫",
-        6: "৬",
-        7: "৭",
-        8: "৮",
-        9: "৯",
-    };
+    //const numericBN: Record<string, string> = {
+    //    0: "০",
+    //    1: "১",
+    //    2: "২",
+    //    3: "৩",
+    //    4: "৪",
+    //    5: "৫",
+    //    6: "৬",
+    //    7: "৭",
+    //    8: "৮",
+    //    9: "৯",
+    //};
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const translate = async (text: any) => {
+    //const translate = async (text: any) => {
 
 
-        const datePattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/);
-        const inWordPattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\s+\d{4}$/);
+    //    const datePattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/);
+    //    const inWordPattern = new RegExp(/^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\s+\d{4}$/);
         
-        if(inWordPattern.test(text)){
-            const res = await fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=en|bn`)
-            const data = await res.json();
-            const bnText = data.responseData.translatedText;
+    //    if(inWordPattern.test(text)){
+    //        const res = await fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=en|bn`)
+    //        const data = await res.json();
+    //        const bnText = data.responseData.translatedText;
 
-            const dateArray = bnText.split(" ");
-            const dateArrayBn = numberToBnNumber(dateArray);
-            const newArray = [dateArrayBn[0],dateArray[1],dateArrayBn[2]]
+    //        const dateArray = bnText.split(" ");
+    //        const dateArrayBn = numberToBnNumber(dateArray);
+    //        const newArray = [dateArrayBn[0],dateArray[1],dateArrayBn[2]]
 
-            const bnDate = newArray.join(" ")
+    //        const bnDate = newArray.join(" ")
 
-            return bnDate;
-        }
-        else if(datePattern.test(text)){
-            const dateArry = text.toString().split("/")
+    //        return bnDate;
+    //    }
+    //    else if(datePattern.test(text)){
+    //        const dateArry = text.toString().split("/")
 
-            const dateArayBn = numberToBnNumber(dateArry);
+    //        const dateArayBn = numberToBnNumber(dateArry);
 
-            const bnDate = dateArayBn.join("/")
+    //        const bnDate = dateArayBn.join("/")
             
-            return bnDate;
-        }
-        else if (typeof text == 'string') {
-            const res = await fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=en|bn`)
-            const data = await res.json();
-            const bnText = data.responseData.translatedText;
+    //        return bnDate;
+    //    }
+    //    else if (typeof text == 'string') {
+    //        const res = await fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=en|bn`)
+    //        const data = await res.json();
+    //        const bnText = data.responseData.translatedText;
 
-            return bnText;
-        }
-        else if(typeof text == "number"){
-            const numArray = text.toString().split("")
+    //        return bnText;
+    //    }
+    //    else if(typeof text == "number"){
+    //        const numArray = text.toString().split("")
 
-            const bnDigits = numArray.map((num) => numericBN[num])
+    //        const bnDigits = numArray.map((num) => numericBN[num])
 
-            const bnNumber = bnDigits.join("");
-            return bnNumber;
-        }
+    //        const bnNumber = bnDigits.join("");
+    //        return bnNumber;
+    //    }
         
-    };
+    //};
 
 
-    const numberToBnNumber=(dateArry:string[])=>{
+    //const numberToBnNumber=(dateArry:string[])=>{
        
-        const dateArayBn = dateArry.map((num: string)=>{
-            const singleDigit = num.split("");
-            const bnArray = singleDigit.map(num=> numericBN[num])
+    //    const dateArayBn = dateArry.map((num: string)=>{
+    //        const singleDigit = num.split("");
+    //        const bnArray = singleDigit.map(num=> numericBN[num])
 
-            const number = bnArray.join("")
+    //        const number = bnArray.join("")
 
-            return number
-        });
+    //        return number
+    //    });
 
-        return dateArayBn;
-    }
+    //    return dateArayBn;
+    //}
 
     const info = {
         BRInformation,
         setBRInformation,
         isLoading,
-        setIsLoading,
-        translate
+        setIsLoading
     };
 
     return (

@@ -31,7 +31,7 @@ type Inputs = {
 
 const VerifyForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { BRInformation, translate, setIsLoading, isLoading }: any = useContext(AuthContext);
+    const { BRInformation, setIsLoading, isLoading }: any = useContext(AuthContext);
 
     const Navigate = useNavigate();
 
@@ -44,43 +44,16 @@ const VerifyForm = () => {
 
         const base64Image = BRInformation.base64Image;
 
-        const bnData = await translateObj(data);
-
         const newData = {
             base64Image,
-            BRInfoEn: {
-                ...data,
-                fathersBRN: data.fathersBRN || 0,
-                fathersNID: data.fathersNID || 0,
-                mothersBRN: data.mothersBRN || 0,
-                mothersNID: data.mothersNID || 0
-            },
-            BRInfoBn: {
-                registerNoBn: bnData.registerNo,
-                dateOfIssueBn: bnData.dateOfIssue,
-                dateOfRegistrationBn: bnData.dateOfRegistration,
-                brNumberBn: bnData.brNumber,
-                nameBn: bnData.name,
-                genderBn: bnData.gender,
-                dateOfBirthBn: bnData.dateOfBirth,
-                inWordBn: bnData.inWord,
-                orderOfChildBn: bnData.orderOfChild,
-                placeOfBirthBn: bnData.placeOfBirth,
-                permanentAddressBn: bnData.permanentAddress,
-                fathersNameBn: bnData.fathersName,
-                fathersBRNBn: bnData.fathersBRN,
-                fathersNationalityBn: bnData.fathersNationality,
-                fathersNIDBn: bnData.fathersNID,
-                mothersNameBn: bnData.mothersName,
-                mothersBRNBn: bnData.mothersBRN,
-                mothersNationalityBn: bnData.mothersNationality,
-                mothersNIDBn: bnData.mothersNID
-            }
+            ...data,
+            fathersBRN: data.fathersBRN || 0,
+            fathersNID: data.fathersNID || 0,
+            mothersBRN: data.mothersBRN || 0,
+            mothersNID: data.mothersNID || 0
         };
 
-        console.log(BRInformation);
-        console.log(data);
-
+        console.log(newData);
 
         try {
             const response = await axios.put("https://localhost:7208/api/BirthCertificate", newData);
@@ -92,26 +65,26 @@ const VerifyForm = () => {
         }
 
         
-        reset();
-        Navigate('/');
+        //reset();
+        //Navigate('/');
     };
 
 
-    const translateObj = async (data: Inputs) => {
-        const translatedData = {};
+    //const translateObj = async (data: Inputs) => {
+    //    const translatedData = {};
 
 
-        for (const [key, value] of Object.entries(data)) {
+    //    for (const [key, value] of Object.entries(data)) {
 
-            if (key == "registerNo" || key == "brNumber" || key == "orderOfChild" || key == "fathersBRN" || key == "fathersNID" || key == "mothersBRN" || key == "mothersNID") {
-                translatedData[key] = await translate(parseInt(value));
-            }
-            else {
-                translatedData[key] = await translate(value);
-            }
-        }
-        return translatedData;
-    }
+    //        if (key == "registerNo" || key == "brNumber" || key == "orderOfChild" || key == "fathersBRN" || key == "fathersNID" || key == "mothersBRN" || key == "mothersNID") {
+    //            translatedData[key] = await translate(parseInt(value));
+    //        }
+    //        else {
+    //            translatedData[key] = await translate(value);
+    //        }
+    //    }
+    //    return translatedData;
+    //}
 
 
 

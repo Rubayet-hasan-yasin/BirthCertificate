@@ -1,8 +1,6 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { AuthContext } from "../../../provider/Authprovider";
-import AnikiHamster from "../../../assets/Aniki Hamster.json"
-import Lottie from "lottie-react";
 import { useNavigate } from "react-router-dom";
 import AnimationAnikiHamster from "../../../components/AnimationAnikiHamster";
 
@@ -10,7 +8,7 @@ import AnimationAnikiHamster from "../../../components/AnimationAnikiHamster";
 
 const Home = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { isLoading, setIsLoading, setBRInformation }: any = useContext(AuthContext);
+    const { setIsLoading, setBRInformation }: any = useContext(AuthContext);
     const Navigate = useNavigate();
 
 

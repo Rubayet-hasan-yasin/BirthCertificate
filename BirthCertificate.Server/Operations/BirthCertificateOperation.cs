@@ -184,7 +184,7 @@ namespace BirthCertificate.Server.Operations
             BRInfoBn.nameBn = TranslateTextApi(BRInfoEn.name).Result;
             BRInfoBn.genderBn = TranslateTextApi(BRInfoEn.gender).Result;
             BRInfoBn.dateOfBirthBn = TranslateDate(BRInfoEn.dateOfBirth);
-            BRInfoBn.inWordBn = TranslateTextApi(BRInfoEn.inWord).Result;
+            BRInfoBn.inWordBn = TranslateDate(BRInfoEn.inWord);
             BRInfoBn.orderOfChildBn = TranslateNumeric(BRInfoEn.orderOfChild.ToString());
             BRInfoBn.placeOfBirthBn = TranslateTextApi(BRInfoEn.placeOfBirth).Result;
             BRInfoBn.permanentAddressBn = TranslateTextApi(BRInfoEn.permanentAddress).Result;
@@ -203,9 +203,10 @@ namespace BirthCertificate.Server.Operations
         
         private string TranslateDate(string date)
         {
-            
 
-            Match datePattern =new Regex(@"^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\\s+\\d{4}$").Match(date);
+
+            Match datePattern = new Regex(@"^(0[1-9]|[12][0-9]|3[01])(st|nd|rd|th)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),\s+\d{4}$").Match(date);
+
 
             if (datePattern.Success)
             {
